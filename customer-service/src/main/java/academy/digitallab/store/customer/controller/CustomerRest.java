@@ -1,8 +1,8 @@
 package academy.digitallab.store.customer.controller;
 
-import academy.digitallab.store.customer.service.CustomerService;
 import academy.digitallab.store.customer.repository.entity.Customer;
 import academy.digitallab.store.customer.repository.entity.Region;
+import academy.digitallab.store.customer.service.CustomerService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -31,24 +31,24 @@ public class CustomerRest {
     // -------------------Retrieve All Customers--------------------------------------------
 
     @GetMapping
-    public ResponseEntity<List<Customer>> listAllCustomers(@RequestParam(name = "regionId" , required = false) Long regionId ) {
-        List<Customer> customers =  new ArrayList<>();
-        if (null ==  regionId) {
+    public ResponseEntity<List<Customer>> listAllCustomers(@RequestParam(name = "regionId", required = false) Long regionId) {
+        List<Customer> customers;
+        if (Objects.isNull( regionId )) {
             customers = customerService.findCustomerAll();
             if (customers.isEmpty()) {
                 return ResponseEntity.noContent().build();
             }
-        }else{
-            Region Region= new Region();
+        } else {
+            Region Region = new Region();
             Region.setId(regionId);
             customers = customerService.findCustomersByRegion(Region);
-            if ( null == customers ) {
+            if (Objects.isNull( customers )) {
                 log.error("Customers with Region id {} not found.", regionId);
-                return  ResponseEntity.notFound().build();
+                return ResponseEntity.notFound().build();
             }
         }
 
-        return  ResponseEntity.ok(customers);
+        return ResponseEntity.ok(customers);
     }
 
     // -------------------Retrieve Single Customer------------------------------------------
@@ -57,11 +57,11 @@ public class CustomerRest {
     public ResponseEntity<Customer> getCustomer(@PathVariable("id") long id) {
         log.info("Fetching Customer with id {}", id);
         Customer customer = customerService.getCustomer(id);
-        if (  null == customer) {
+        if (null == customer) {
             log.error("Customer with id {} not found.", id);
-            return  ResponseEntity.notFound().build();
+            return ResponseEntity.notFound().build();
         }
-        return  ResponseEntity.ok(customer);
+        return ResponseEntity.ok(customer);
     }
 
     // -------------------Create a Customer-------------------------------------------
@@ -69,13 +69,13 @@ public class CustomerRest {
     @PostMapping
     public ResponseEntity<Customer> createCustomer(@Valid @RequestBody Customer customer, BindingResult result) {
         log.info("Creating Customer : {}", customer);
-        if (result.hasErrors()){
+        if (result.hasErrors()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, this.formatMessage(result));
         }
 
-       Customer customerDB = customerService.createCustomer (customer);
+        Customer customerDB = customerService.createCustomer(customer);
 
-        return  ResponseEntity.status( HttpStatus.CREATED).body(customerDB);
+        return ResponseEntity.status(HttpStatus.CREATED).body(customerDB);
     }
 
     // ------------------- Update a Customer ------------------------------------------------
@@ -86,13 +86,13 @@ public class CustomerRest {
 
         Customer currentCustomer = customerService.getCustomer(id);
 
-        if ( null == currentCustomer ) {
+        if (null == currentCustomer) {
             log.error("Unable to update. Customer with id {} not found.", id);
-            return  ResponseEntity.notFound().build();
+            return ResponseEntity.notFound().build();
         }
         customer.setId(id);
-        currentCustomer=customerService.updateCustomer(customer);
-        return  ResponseEntity.ok(currentCustomer);
+        currentCustomer = customerService.updateCustomer(customer);
+        return ResponseEntity.ok(currentCustomer);
     }
 
     // ------------------- Delete a Customer-----------------------------------------
@@ -102,18 +102,18 @@ public class CustomerRest {
         log.info("Fetching & Deleting Customer with id {}", id);
 
         Customer customer = customerService.getCustomer(id);
-        if ( null == customer ) {
+        if (null == customer) {
             log.error("Unable to delete. Customer with id {} not found.", id);
-            return  ResponseEntity.notFound().build();
+            return ResponseEntity.notFound().build();
         }
         customer = customerService.deleteCustomer(customer);
-        return  ResponseEntity.ok(customer);
+        return ResponseEntity.ok(customer);
     }
 
-    private String formatMessage( BindingResult result){
-        List<Map<String,String>> errors = result.getFieldErrors().stream()
-                .map(err ->{
-                    Map<String,String>  error =  new HashMap<>();
+    private String formatMessage(BindingResult result) {
+        List<Map<String, String>> errors = result.getFieldErrors().stream()
+                .map(err -> {
+                    Map<String, String> error = new HashMap<>();
                     error.put(err.getField(), err.getDefaultMessage());
                     return error;
 
@@ -122,7 +122,7 @@ public class CustomerRest {
                 .code("01")
                 .messages(errors).build();
         ObjectMapper mapper = new ObjectMapper();
-        String jsonString="";
+        String jsonString = "";
         try {
             jsonString = mapper.writeValueAsString(errorMessage);
         } catch (JsonProcessingException e) {
