@@ -15,3 +15,9 @@ spring:
     user:
       name: root
       password: s3cr3t
+  #logging:
+    #level:
+      #org:
+        #springframework:
+        #boot:
+      #autoconfigure: DEBUG
