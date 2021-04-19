@@ -7,10 +7,11 @@ spring:
       server:
         git:
           uri: https://github.com/sdsc81/ms-course-youtube.git
-          searchPaths: config-data
           username: sdsc81
           password: Tgf$hdik634ldfugnd7j$nd
           default-label: "ciego-02-addconfigserver"
+          search-paths:
+            - data-config
   security:
     user:
       name: root
