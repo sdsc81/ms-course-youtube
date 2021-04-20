@@ -9,7 +9,7 @@ spring:
           uri: https://github.com/sdsc81/ms-course-youtube.git
           username: sdsc81
           password: Tgf$hdik634ldfugnd7j$nd
-          default-label: "ciego-03-addregistryserver"
+          default-label: "ciego-05-gateway"
           search-paths:
             - data-config
   security:
