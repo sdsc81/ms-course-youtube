@@ -41,6 +41,8 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8099/eureka/
+  instance:
+    prefer-ip-address: true
 
 # habilitamos el actuator (necesario para el dashboard de histryx)
 management:
