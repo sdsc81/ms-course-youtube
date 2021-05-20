@@ -1,8 +1,13 @@
-package academy.digitallab.store.registry;
+package uy.com.ciego.store.security;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class RegistryServiceApplicationTests {
+class SecurityServiceApplicationTests {
+
+	@Test
+	void contextLoads() {
+	}
+
 }
