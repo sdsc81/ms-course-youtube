@@ -1,6 +1,6 @@
 #Application Configuration
 server:
-  port: 8071
+  port: 8091
 
 spring:
   h2:
